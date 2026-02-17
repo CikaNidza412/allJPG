@@ -1,1 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>alljpg.xyz — Uncle Nick’s Network</title>
+  <meta name="description" content="Convert images to JPG, resize & compress — in your browser. No uploads." />
+
+  <!-- Google Analytics (GA4) — replace G-XXXXXXXXXX with your Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBXM5LV7KM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EBXM5LV7KM', { anonymize_ip: true });
+  </script>
+
+  <style>
+    :root{
+      color-scheme: light;
+      --bg:#f6f7fb; --card:#fff; --shadow:0 18px 45px rgba(0,0,0,.08);
+      --text:#1f2937; --muted:#6b7280;
+      --drop:#cfe6ff; --dropBorder:#7cb4ff;
+      --btn:#cbd5e1; --btnText:#ffffff;
+      --line:#e5e7eb;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg); color:var(--text);
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:28px 18px;
+    }
+    .wrap{width:min(980px,100%); display:flex; flex-direction:column; align-items:center; gap:12px;}
+    .card{width:min(860px,100%); background:var(--card); border-radius:18px; box-shadow:var(--shadow); padding:26px 26px 18px;}
+    .top{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; margin-bottom:14px;}
+    .logo{
+      width:74px; height:74px; border-radius:999px;
+      background:#eef2ff; border:3px solid rgba(59,130,246,.18);
+      display:grid; place-items:center; overflow:hidden;
+    }
+    h1{margin:0; font-size:22px; font-weight:500; letter-spacing:.2px;}
+    .sub{margin:0; font-size:13px; color:var(--muted)}
+
+    .drop{
+      margin-top:10px; background:var(--drop);
+      border:2px dashed var(--dropBorder); border-radius:14px; padding:22px 18px; text-align:center;
+      cursor:pointer; user-select:none;
+    }
+    .drop .icon{font-size:34px; line-height:1; margin-bottom:8px;}
+    .drop .title{margin:0; font-size:16px; color:rgba(37,99,235,.75); font-weight:600;}
+    .drop .hint{margin:6px 0 0; font-size:12px; color:rgba(17,24,39,.65)}
+
+    .controls{margin-top:14px;}
+    .panel{border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff;}
+    .panel h2{margin:0 0 10px; font-size:14px; font-weight:700; color:#374151;}
+    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
+    input[type="number"], input[type="text"], select{
+      width:100%; padding:10px 10px; border:1px solid var(--line); border-radius:12px; outline:none; font-size:14px;
+    }
+    input[type="range"]{width:100%;}
+
+    /* 2 rows x 3 columns layout */
+    .grid3{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 900px){
+      .grid3{ grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .muted{color:var(--muted)}
+    .btn{
+      width:100%; border:0; border-radius:12px; padding:14px 16px;
+      background:var(--btn); color:var(--btnText); font-size:15px; font-weight:700; cursor:pointer;
+    }
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .mini-actions{display:flex; gap:10px; justify-content:center; margin-top:10px; flex-wrap:wrap;}
+    .linkbtn{
+      border:1px solid var(--line); background:#fff; border-radius:999px;
+      padding:8px 12px; font-weight:600; cursor:pointer; color:#111827;
+    }
+    .dangerbtn{
+      border:1px solid rgba(239,68,68,.35);
+      background:#fff;
+      color:#b91c1c;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .status{margin-top:10px; font-size:12px; color:var(--muted); text-align:center;}
+
+    .progressWrap{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+      display:none;
+    }
+    .progressBar{
+      height:12px;
+      width:0%;
+      background: linear-gradient(90deg, #7cb4ff, #60a5fa, #93c5fd);
+      transition: width .15s ease;
+    }
+    .progressMeta{
+      display:flex; justify-content:space-between; gap:10px;
+      font-size:12px; color:var(--muted);
+      margin-top:8px;
+      display:none;
+    }
+
+    .table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; border:1px solid var(--line); margin-top:14px; display:none;}
+    .table th, .table td{padding:10px 10px; font-size:13px; border-bottom:1px solid #eef2f7; vertical-align:middle;}
+    .table th{background:#f8fafc; text-align:left; color:#374151; font-weight:700;}
+    .right{text-align:right;}
+    .sr{font-variant-numeric: tabular-nums;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace; font-weight:650;}
+
+    footer{width:min(860px,100%); text-align:center; color:var(--muted); font-size:12px; line-height:1.45; padding:6px 10px 0;}
+    .footer-strong{color:#374151; font-weight:600;}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="logo" aria-label="Uncle Nick logo">
+          <!-- Minimal “Uncle Nick’s Network” shield logo (inline SVG) -->
+          <svg width="74" height="74" viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="UN Shield">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#7c3aed"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#34d399"/>
+                <stop offset="1" stop-color="#60a5fa"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="74" height="74" rx="37" fill="#eef2ff"/>
+            <g transform="translate(14,10)">
+              <path d="M23 0c8 0 16 3 23 7v18c0 16-10 30-23 34C10 55 0 41 0 25V7C7 3 15 0 23 0z" fill="url(#g1)"/>
+              <path d="M23 8c6 0 12 2 18 5v12c0 12-7 23-18 27C12 48 5 37 5 25V13c6-3 12-5 18-5z" fill="url(#g2)" opacity="0.95"/>
+              <path d="M15 28l6 6 12-13" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="23" y="20" text-anchor="middle" font-family="system-ui,Segoe UI,Arial" font-size="12" font-weight="900" fill="white">UN</text>
+            </g>
+          </svg>
+        </div>
+
+        <h1>alljpg.xyz</h1>
+        <p class="sub">Uncle Nick’s Network — Convert to JPG, resize & compress (no uploads).</p>
+      </div>
+
+      <div class="drop" id="drop">
+        <div class="icon">📁</div>
+        <p class="title">Drop images here or click to choose</p>
+        <p class="hint">In-browser: JPG/PNG/WEBP/GIF/BMP (HEIC beta: may fail depending on browser)</p>
+        <input id="file" type="file" accept="image/*,.heic,.heif" multiple hidden />
+      </div>
+
+      <div class="controls">
+        <div class="panel">
+          <h2>Output settings</h2>
+
+          <!-- Row 1: quality, fit within, max width/height -->
+          <div class="grid3">
+            <div>
+              <label>Quality (<span id="qLabel">85</span>%)</label>
+              <input id="quality" type="range" min="30" max="95" value="85" />
+            </div>
+
+            <div>
+              <label>Resize mode</label>
+              <select id="resizeMode">
+                <option value="none">No resize</option>
+                <option value="fit">Fit within (keep aspect)</option>
+              </select>
+              <div class="muted" style="font-size:12px; margin-top:8px;">
+                Fit mode scales down only (never upscale).
+              </div>
+            </div>
+
+            <div>
+              <label>Max width / height (px)</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <input id="maxW" type="number" min="1" placeholder="e.g. 1920" />
+                <input id="maxH" type="number" min="1" placeholder="e.g. 1080" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: target file size, filename pattern, background -->
+          <div class="grid3" style="margin-top:12px;">
+            <div>
+              <label>Target file size (KB) — “Make it under”</label>
+              <input id="targetKB" type="number" min="0" placeholder="e.g. 300 (optional)" />
+              <div class="muted" style="font-size:12px; margin-top:8px;">
+                If set, the worker reduces quality until under target (down to ~30%).
+              </div>
+            </div>
+
+            <div>
+              <label>Filename pattern</label>
+              <select id="nameMode">
+                <option value="keep">Keep original name</option>
+                <option value="suffix">Add “-jpg” suffix</option>
+                <option value="alljpg">Use “alljpg-###.jpg”</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Background for transparency</label>
+              <select id="bg">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="custom">Custom…</option>
+              </select>
+              <div style="margin-top:8px; display:none;" id="bgCustomWrap">
+                <input id="bgCustom" type="text" value="#ffffff" placeholder="#ffffff" />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <button class="btn" id="convert" disabled>Convert selected images</button>
+
+            <div class="progressWrap" id="progressWrap">
+              <div class="progressBar" id="progressBar"></div>
+            </div>
+            <div class="progressMeta" id="progressMeta">
+              <div id="progressLeft">0 / 0</div>
+              <div id="progressRight">0%</div>
+            </div>
+
+            <div class="mini-actions">
+              <button class="linkbtn" id="downloadZip" disabled>Download ZIP</button>
+              <button class="linkbtn" id="clear" disabled>Clear</button>
+            </div>
+            <div class="status" id="status">Ready.</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table" id="table">
+        <thead>
+          <tr>
+            <th>File</th>
+            <th class="right">Original</th>
+            <th class="right">Result</th>
+            <th class="right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <footer>
+      <div class="footer-strong">© 2026 Uncle Nick’s Network</div>
+      Privacy: No logs, no tracking (server-side). This tool processes files locally in your browser.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  const state = {
+    files: [],
+    results: [],
+    worker: null,
+    busy: false
+  };
+
+  function fmtBytes(bytes){
+    if (!Number.isFinite(bytes)) return "—";
+    const kb = bytes/1024;
+    if (kb < 1024) return `${kb.toFixed(1)} KB`;
+    return `${(kb/1024).toFixed(2)} MB`;
+  }
+
+  function setStatus(msg){ $("status").textContent = msg; }
+
+  function showProgress(show){
+    $("progressWrap").style.display = show ? "block" : "none";
+    $("progressMeta").style.display = show ? "flex" : "none";
+    if (!show){
+      $("progressBar").style.width = "0%";
+      $("progressLeft").textContent = "0 / 0";
+      $("progressRight").textContent = "0%";
+    }
+  }
+
+  function setProgress(done, total){
+    const pct = total ? Math.round((done/total)*100) : 0;
+    $("progressBar").style.width = `${pct}%`;
+    $("progressLeft").textContent = `${done} / ${total}`;
+    $("progressRight").textContent = `${pct}%`;
+  }
+
+  function bgColor(){
+    const mode = $("bg").value;
+    if (mode === "white") return "#ffffff";
+    if (mode === "black") return "#000000";
+    return ($("bgCustom").value || "#ffffff").trim();
+  }
+
+  $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
+  $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
+
+  const drop = $("drop");
+  drop.addEventListener("click", () => $("file").click());
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.opacity = "0.85"; });
+  drop.addEventListener("dragleave", () => { drop.style.opacity = "1"; });
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault(); drop.style.opacity = "1";
+    addFiles(Array.from(e.dataTransfer.files || []));
+  });
+  $("file").addEventListener("change", (e) => {
+    addFiles(Array.from(e.target.files || []));
+    $("file").value = "";
+  });
+
+  function addFiles(files){
+    const images = files.filter(f => f && (f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)));
+    if (!images.length){ setStatus("No image files detected."); return; }
+
+    state.files.push(...images);
+    state.results = new Array(state.files.length).fill(null);
+
+    $("convert").disabled = false;
+    $("clear").disabled = false;
+
+    setStatus(`${state.files.length} file(s) selected.`);
+    renderTable();
+  }
+
+  function safeBaseName(filename){
+    return filename.replace(/\.[^.]+$/, "").replace(/[^\w\-]+/g, "_").slice(0, 80);
+  }
+
+  function makeOutName(originalName, idx){
+    const mode = $("nameMode").value;
+    if (mode === "alljpg") return `alljpg-${String(idx+1).padStart(3,"0")}.jpg`;
+    const base = safeBaseName(originalName);
+    if (mode === "suffix") return `${base}-jpg.jpg`;
+    return `${base}.jpg`;
+  }
+
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function deleteFile(index){
+    if (state.busy) return;
+
+    state.files.splice(index, 1);
+    state.results.splice(index, 1);
+
+    if (state.files.length === 0){
+      $("convert").disabled = true;
+      $("downloadZip").disabled = true;
+      $("clear").disabled = true;
+      showProgress(false);
+      setStatus("Ready.");
+    } else {
+      $("convert").disabled = false;
+      $("clear").disabled = false;
+      setStatus(`${state.files.length} file(s) selected.`);
+    }
+    renderTable();
+  }
+
+  function renderTable(){
+    const tbody = $("tbody");
+    tbody.innerHTML = "";
+    $("table").style.display = state.files.length ? "table" : "none";
+
+    state.files.forEach((f, idx) => {
+      const tr = document.createElement("tr");
+
+      const tdName = document.createElement("td");
+      tdName.textContent = f.name;
+
+      const tdOrig = document.createElement("td");
+      tdOrig.className = "right sr";
+      tdOrig.textContent = fmtBytes(f.size);
+
+      const tdRes = document.createElement("td");
+      tdRes.className = "right sr";
+      const res = state.results[idx];
+      tdRes.textContent = res ? fmtBytes(res.size) : "—";
+
+      const tdAct = document.createElement("td");
+      tdAct.className = "right";
+
+      const wrap = document.createElement("div");
+      wrap.style.display = "inline-flex";
+      wrap.style.gap = "8px";
+      wrap.style.flexWrap = "wrap";
+      wrap.style.justifyContent = "flex-end";
+
+      if (res){
+        const dl = document.createElement("button");
+        dl.className = "linkbtn";
+        dl.textContent = "Download";
+        dl.addEventListener("click", () => downloadBlob(res.blob, res.name));
+        wrap.appendChild(dl);
+      }
+
+      const del = document.createElement("button");
+      del.className = "dangerbtn";
+      del.textContent = "Delete";
+      del.addEventListener("click", () => deleteFile(idx));
+      wrap.appendChild(del);
+
+      tdAct.appendChild(wrap);
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdOrig);
+      tr.appendChild(tdRes);
+      tr.appendChild(tdAct);
+      tbody.appendChild(tr);
+    });
+
+    const okCount = state.results.filter(Boolean).length;
+    $("downloadZip").disabled = okCount === 0;
+  }
+
+  function ensureWorker(){
+    if (state.worker) return;
+
+    const workerCode = `
+      function calcFitSize(w, h, maxW, maxH){
+        if (!maxW && !maxH) return { w, h };
+        const mw = maxW || w;
+        const mh = maxH || h;
+        const scale = Math.min(1, mw / w, mh / h);
+        return { w: Math.max(1, Math.round(w * scale)), h: Math.max(1, Math.round(h * scale)) };
+      }
+
+      async function jpegFromBitmap(bmp, outW, outH, bg, q){
+        const canvas = new OffscreenCanvas(outW, outH);
+        const ctx = canvas.getContext("2d", { alpha: false });
+        ctx.fillStyle = bg;
+        ctx.fillRect(0,0,outW,outH);
+        ctx.drawImage(bmp, 0, 0, outW, outH);
+        return await canvas.convertToBlob({ type: "image/jpeg", quality: q });
+      }
+
+      async function makeUnderTarget(bmp, outW, outH, bg, startQ, targetBytes){
+        let q = startQ;
+        let blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
+        if (!targetBytes) return { blob, q };
+
+        const floor = 0.30;
+        let attempts = 0;
+
+        while (blob.size > targetBytes && q > floor && attempts < 12){
+          const ratio = targetBytes / blob.size;
+          const nextQ = Math.max(floor, Math.min(q - 0.05, q * (0.5 + 0.5 * ratio)));
+          q = Number(nextQ.toFixed(3));
+          blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
+          attempts++;
+        }
+        return { blob, q };
+      }
+
+      self.onmessage = async (ev) => {
+        const msg = ev.data || {};
+        if (msg.type !== "convert") return;
+
+        const { files, settings } = msg;
+        const total = files.length;
+        let done = 0;
+
+        if (typeof OffscreenCanvas === "undefined" || typeof createImageBitmap === "undefined"){
+          self.postMessage({ type:"fatal", error:"Worker image processing not supported in this browser." });
+          return;
+        }
+
+        for (let i=0; i<total; i++){
+          const f = files[i];
+          try{
+            const blob = new Blob([f.data], { type: f.mime || "application/octet-stream" });
+            const bmp = await createImageBitmap(blob);
+
+            let outW = bmp.width, outH = bmp.height;
+            if (settings.resizeMode === "fit"){
+              const s = calcFitSize(bmp.width, bmp.height, settings.maxW, settings.maxH);
+              outW = s.w; outH = s.h;
+            }
+
+            const { blob: outBlob, q } = await makeUnderTarget(bmp, outW, outH, settings.bg, settings.quality, settings.targetBytes);
+            const ab = await outBlob.arrayBuffer();
+
+            done++;
+            self.postMessage({ type:"result", index:i, ok:true, name:f.outName, size:outBlob.size, q, data:ab }, [ab]);
+            self.postMessage({ type:"progress", done, total });
+
+          } catch (e){
+            done++;
+            self.postMessage({ type:"result", index:i, ok:false, error:String(e && e.message ? e.message : e) });
+            self.postMessage({ type:"progress", done, total });
+          }
+        }
+
+        self.postMessage({ type:"done" });
+      };
+    `;
+
+    const blob = new Blob([workerCode], { type: "application/javascript" });
+    const url = URL.createObjectURL(blob);
+    state.worker = new Worker(url);
+  }
+
+  async function convertAll(){
+    if (state.busy) return;
+    if (!state.files.length) return;
+
+    state.busy = true;
+    $("convert").disabled = true;
+    $("downloadZip").disabled = true;
+
+    showProgress(true);
+    setProgress(0, state.files.length);
+    setStatus("Converting… (worker)");
+
+    // reset results
+    state.results = new Array(state.files.length).fill(null);
+    renderTable();
+
+    const settings = {
+      quality: Number($("quality").value) / 100,
+      resizeMode: $("resizeMode").value,
+      maxW: Number($("maxW").value) || 0,
+      maxH: Number($("maxH").value) || 0,
+      bg: bgColor(),
+      targetBytes: (Number($("targetKB").value) > 0) ? Math.round(Number($("targetKB").value) * 1024) : 0
+    };
+
+    // build payload
+    const payload = [];
+    for (let i=0; i<state.files.length; i++){
+      const f = state.files[i];
+      const ab = await f.arrayBuffer();
+      payload.push({ name:f.name, mime:f.type || "", outName: makeOutName(f.name, i), data: ab });
+    }
+
+    ensureWorker();
+    const worker = state.worker;
+
+    const onMessage = (ev) => {
+      const m = ev.data || {};
+
+      if (m.type === "fatal"){
+        setStatus("Your browser does not support worker image processing. Try Chrome/Edge.");
+        showProgress(false);
+        state.busy = false;
+        $("convert").disabled = false;
+        worker.removeEventListener("message", onMessage);
+        return;
+      }
+
+      if (m.type === "progress"){
+        setProgress(m.done, m.total);
+        setStatus(`Converting ${m.done}/${m.total}…`);
+      }
+
+      if (m.type === "result"){
+        if (m.ok){
+          const blob = new Blob([m.data], { type:"image/jpeg" });
+          state.results[m.index] = { name:m.name, blob, size:m.size };
+        } else {
+          state.results[m.index] = null;
+        }
+        renderTable();
+      }
+
+      if (m.type === "done"){
+        const okCount = state.results.filter(Boolean).length;
+        if (okCount === state.files.length){
+          setStatus(`Done. Converted ${okCount} image(s).`);
+        } else {
+          setStatus(`Done. Converted ${okCount}/${state.files.length}. Some files may fail (often HEIC beta).`);
+        }
+        $("downloadZip").disabled = okCount === 0;
+        $("convert").disabled = false;
+        state.busy = false;
+        worker.removeEventListener("message", onMessage);
+      }
+    };
+
+    worker.addEventListener("message", onMessage);
+    worker.postMessage({ type:"convert", files: payload, settings }, payload.map(x => x.data));
+  }
+
+  $("convert").addEventListener("click", convertAll);
+
+  $("downloadZip").addEventListener("click", async () => {
+    const ok = state.results.filter(Boolean);
+    if (!ok.length) return;
+
+    setStatus("Building ZIP…");
+    $("downloadZip").disabled = true;
+
+    const zip = new JSZip();
+    ok.forEach(r => zip.file(r.name, r.blob));
+    const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level: 6 }});
+    downloadBlob(blob, "alljpg-converted.zip");
+
+    setStatus("ZIP downloaded.");
+    $("downloadZip").disabled = false;
+  });
+
+  $("clear").addEventListener("click", () => {
+    if (state.busy) return;
+    state.files = [];
+    state.results = [];
+    $("convert").disabled = true;
+    $("downloadZip").disabled = true;
+    $("clear").disabled = true;
+    setStatus("Ready.");
+    showProgress(false);
+    renderTable();
+  });
+
+  // init
+  renderTable();
+</script>
+</body>
+</html>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Uncle Nick’s Network</title>
+  <title>all to jpg — Uncle Nick’s Network</title>
   <meta name="description" content="Convert images to JPG, resize & compress — in your browser. No uploads." />
 
   <!-- Google Analytics (GA4) — replace G-XXXXXXXXXX with your Measurement ID -->
@@ -24,6 +24,9 @@
       --btn:#cbd5e1; --btnText:#ffffff;
       --line:#e5e7eb;
       --danger:#ef4444;
+      --optBg:#ffffff;
+      --optBorder:#e5e7eb;
+      --optShadow:0 6px 18px rgba(0,0,0,.04);
     }
     *{box-sizing:border-box}
     body{
@@ -54,14 +57,21 @@
 
     .controls{margin-top:14px;}
     .panel{border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff;}
-    .panel h2{margin:0 0 10px; font-size:14px; font-weight:700; color:#374151;}
+    .panelHeader{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .panel h2{margin:0; font-size:14px; font-weight:800; color:#374151;}
+
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
     input[type="number"], input[type="text"], select{
       width:100%; padding:10px 10px; border:1px solid var(--line); border-radius:12px; outline:none; font-size:14px;
+      background:#fff;
     }
     input[type="range"]{width:100%;}
+    .muted{color:var(--muted)}
 
-    /* 2 rows x 3 columns layout */
+    /* Grid for option cards */
     .grid3{
       display:grid;
       grid-template-columns: 1fr;
@@ -71,16 +81,83 @@
       .grid3{ grid-template-columns: 1fr 1fr 1fr; }
     }
 
-    .muted{color:var(--muted)}
+    /* Option card with visible borders (mobile-friendly) */
+    .opt{
+      position:relative;
+      border:1px solid var(--optBorder);
+      border-radius:14px;
+      background:var(--optBg);
+      padding:12px;
+      box-shadow: var(--optShadow);
+    }
+    .optTitleRow{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      margin-bottom:8px;
+    }
+    .optTitle{
+      font-size:12px;
+      font-weight:800;
+      color:#374151;
+      line-height:1.2;
+    }
+    .infoDot{
+      width:18px; height:18px; border-radius:999px;
+      border:1px solid var(--line);
+      display:grid; place-items:center;
+      color:#6b7280;
+      font-size:12px;
+      background:#fff;
+      flex:0 0 auto;
+    }
+    /* Help text shown on hover/focus */
+    .help{
+      display:none;
+      margin-top:8px;
+      font-size:12px;
+      color:#6b7280;
+      line-height:1.35;
+    }
+    .opt:hover .help,
+    .opt:focus-within .help{
+      display:block;
+    }
+
+    /* Toggle (Advanced mode) */
+    .toggle{
+      display:flex; align-items:center; gap:10px;
+      user-select:none;
+      font-size:12px;
+      color:#374151;
+      font-weight:700;
+    }
+    .switch{
+      width:42px; height:24px;
+      background:#e5e7eb;
+      border-radius:999px;
+      position:relative;
+      border:1px solid var(--line);
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .knob{
+      position:absolute; top:2px; left:2px;
+      width:20px; height:20px; border-radius:999px;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);
+      transition:transform .18s ease;
+    }
+    .switch.on{ background:#bfdbfe; }
+    .switch.on .knob{ transform: translateX(18px); }
+
     .btn{
       width:100%; border:0; border-radius:12px; padding:14px 16px;
-      background:var(--btn); color:var(--btnText); font-size:15px; font-weight:700; cursor:pointer;
+      background:var(--btn); color:var(--btnText); font-size:15px; font-weight:800; cursor:pointer;
     }
     .btn:disabled{opacity:.6; cursor:not-allowed}
     .mini-actions{display:flex; gap:10px; justify-content:center; margin-top:10px; flex-wrap:wrap;}
     .linkbtn{
       border:1px solid var(--line); background:#fff; border-radius:999px;
-      padding:8px 12px; font-weight:600; cursor:pointer; color:#111827;
+      padding:8px 12px; font-weight:700; cursor:pointer; color:#111827;
     }
     .dangerbtn{
       border:1px solid rgba(239,68,68,.35);
@@ -88,10 +165,9 @@
       color:#b91c1c;
       border-radius:999px;
       padding:8px 12px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
     }
-
     .status{margin-top:10px; font-size:12px; color:var(--muted); text-align:center;}
 
     .progressWrap{
@@ -117,13 +193,16 @@
 
     .table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; border:1px solid var(--line); margin-top:14px; display:none;}
     .table th, .table td{padding:10px 10px; font-size:13px; border-bottom:1px solid #eef2f7; vertical-align:middle;}
-    .table th{background:#f8fafc; text-align:left; color:#374151; font-weight:700;}
+    .table th{background:#f8fafc; text-align:left; color:#374151; font-weight:800;}
     .right{text-align:right;}
     .sr{font-variant-numeric: tabular-nums;}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace; font-weight:650;}
 
     footer{width:min(860px,100%); text-align:center; color:var(--muted); font-size:12px; line-height:1.45; padding:6px 10px 0;}
-    .footer-strong{color:#374151; font-weight:600;}
+    .footer-strong{color:#374151; font-weight:700;}
+
+    /* Advanced section hidden by default */
+    .advanced{ display:none; margin-top:12px; }
+    .advanced.show{ display:block; }
   </style>
 </head>
 
@@ -154,7 +233,7 @@
           </svg>
         </div>
 
-        <h1>JPG convert/resize</h1>
+        <h1>All JPG - convert, compress and resize</h1>
         <p class="sub">Uncle Nick’s Network — Convert to JPG, resize & compress (no uploads).</p>
       </div>
 
@@ -167,63 +246,104 @@
 
       <div class="controls">
         <div class="panel">
-          <h2>Output settings</h2>
+          <div class="panelHeader">
+            <h2>Settings</h2>
 
-          <!-- Row 1: quality, fit within, max width/height -->
-          <div class="grid3">
-            <div>
-              <label>Quality (<span id="qLabel">85</span>%)</label>
-              <input id="quality" type="range" min="30" max="95" value="85" />
-            </div>
-
-            <div>
-              <label>Resize mode</label>
-              <select id="resizeMode">
-                <option value="none">No resize</option>
-                <option value="fit">Fit within (keep aspect)</option>
-              </select>
-              <div class="muted" style="font-size:12px; margin-top:8px;">
-                Fit mode scales down only (never upscale).
-              </div>
-            </div>
-
-            <div>
-              <label>Max width / height (px)</label>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <input id="maxW" type="number" min="1" placeholder="e.g. 1920" />
-                <input id="maxH" type="number" min="1" placeholder="e.g. 1080" />
+            <div class="toggle" id="advToggle">
+              <span>Advanced mode</span>
+              <div class="switch" id="advSwitch" role="switch" aria-checked="false" tabindex="0">
+                <div class="knob"></div>
               </div>
             </div>
           </div>
 
-          <!-- Row 2: target file size, filename pattern, background -->
-          <div class="grid3" style="margin-top:12px;">
-            <div>
-              <label>Target file size (KB) — “Make it under”</label>
-              <input id="targetKB" type="number" min="0" placeholder="e.g. 300 (optional)" />
-              <div class="muted" style="font-size:12px; margin-top:8px;">
-                If set, the worker reduces quality until under target (down to ~30%).
+          <!-- SIMPLE (default): target size + resize -->
+          <div class="grid3">
+            <div class="opt">
+              <div class="optTitleRow">
+                <div class="optTitle">Target file size (KB) — “Make it under”</div>
+                <div class="infoDot" aria-hidden="true">i</div>
+              </div>
+              <input id="targetKB" type="number" min="0" placeholder="e.g. 300" />
+              <div class="help">
+                If set, the converter will reduce JPEG quality until the result is under this size (down to ~30%).
               </div>
             </div>
 
-            <div>
-              <label>Filename pattern</label>
-              <select id="nameMode">
-                <option value="keep">Keep original name</option>
-                <option value="suffix">Add “-jpg” suffix</option>
-                <option value="alljpg">Use “alljpg-###.jpg”</option>
+            <div class="opt">
+              <div class="optTitleRow">
+                <div class="optTitle">Resize mode</div>
+                <div class="infoDot" aria-hidden="true">i</div>
+              </div>
+              <select id="resizeMode">
+                <option value="none">No resize</option>
+                <option value="fit">Fit within (keep aspect)</option>
               </select>
+              <div class="help">
+                “Fit within” scales down to stay inside Max width/height and keeps aspect ratio. It never upscales.
+              </div>
             </div>
 
-            <div>
-              <label>Background for transparency</label>
-              <select id="bg">
-                <option value="white">White</option>
-                <option value="black">Black</option>
-                <option value="custom">Custom…</option>
-              </select>
-              <div style="margin-top:8px; display:none;" id="bgCustomWrap">
-                <input id="bgCustom" type="text" value="#ffffff" placeholder="#ffffff" />
+            <div class="opt">
+              <div class="optTitleRow">
+                <div class="optTitle">Max width / height (px)</div>
+                <div class="infoDot" aria-hidden="true">i</div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <input id="maxW" type="number" min="1" placeholder="e.g. 1920" />
+                <input id="maxH" type="number" min="1" placeholder="e.g. 1080" />
+              </div>
+              <div class="help">
+                Only used when Resize mode is “Fit within”. Leave empty to skip resizing.
+              </div>
+            </div>
+          </div>
+
+          <!-- ADVANCED (hidden by default): quality + naming + background -->
+          <div class="advanced" id="advanced">
+            <div class="grid3">
+              <div class="opt">
+                <div class="optTitleRow">
+                  <div class="optTitle">Quality (<span id="qLabel">85</span>%)</div>
+                  <div class="infoDot" aria-hidden="true">i</div>
+                </div>
+                <input id="quality" type="range" min="30" max="95" value="85" />
+                <div class="help">
+                  Controls JPEG compression. If Target file size is set, this is used as the starting point and may be reduced.
+                </div>
+              </div>
+
+              <div class="opt">
+                <div class="optTitleRow">
+                  <div class="optTitle">Filename pattern</div>
+                  <div class="infoDot" aria-hidden="true">i</div>
+                </div>
+                <select id="nameMode">
+                  <option value="keep">Keep original name</option>
+                  <option value="suffix">Add “-jpg” suffix</option>
+                  <option value="alljpg">Use “alljpg-###.jpg”</option>
+                </select>
+                <div class="help">
+                  Sets the output naming rule for downloads and ZIP.
+                </div>
+              </div>
+
+              <div class="opt">
+                <div class="optTitleRow">
+                  <div class="optTitle">Background for transparency</div>
+                  <div class="infoDot" aria-hidden="true">i</div>
+                </div>
+                <select id="bg">
+                  <option value="white">White</option>
+                  <option value="black">Black</option>
+                  <option value="custom">Custom…</option>
+                </select>
+                <div style="margin-top:8px; display:none;" id="bgCustomWrap">
+                  <input id="bgCustom" type="text" value="#ffffff" placeholder="#ffffff" />
+                </div>
+                <div class="help">
+                  PNG/WebP transparency needs a background when converting to JPG. Choose white/black/custom.
+                </div>
               </div>
             </div>
           </div>
@@ -267,6 +387,7 @@
     </footer>
   </div>
 
+  <!-- JSZip for ZIP downloads -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script>
@@ -276,7 +397,8 @@
     files: [],
     results: [],
     worker: null,
-    busy: false
+    busy: false,
+    advanced: false
   };
 
   function fmtBytes(bytes){
@@ -312,36 +434,6 @@
     return ($("bgCustom").value || "#ffffff").trim();
   }
 
-  $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
-  $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
-
-  const drop = $("drop");
-  drop.addEventListener("click", () => $("file").click());
-  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.opacity = "0.85"; });
-  drop.addEventListener("dragleave", () => { drop.style.opacity = "1"; });
-  drop.addEventListener("drop", (e) => {
-    e.preventDefault(); drop.style.opacity = "1";
-    addFiles(Array.from(e.dataTransfer.files || []));
-  });
-  $("file").addEventListener("change", (e) => {
-    addFiles(Array.from(e.target.files || []));
-    $("file").value = "";
-  });
-
-  function addFiles(files){
-    const images = files.filter(f => f && (f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)));
-    if (!images.length){ setStatus("No image files detected."); return; }
-
-    state.files.push(...images);
-    state.results = new Array(state.files.length).fill(null);
-
-    $("convert").disabled = false;
-    $("clear").disabled = false;
-
-    setStatus(`${state.files.length} file(s) selected.`);
-    renderTable();
-  }
-
   function safeBaseName(filename){
     return filename.replace(/\.[^.]+$/, "").replace(/[^\w\-]+/g, "_").slice(0, 80);
   }
@@ -363,26 +455,6 @@
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-  }
-
-  function deleteFile(index){
-    if (state.busy) return;
-
-    state.files.splice(index, 1);
-    state.results.splice(index, 1);
-
-    if (state.files.length === 0){
-      $("convert").disabled = true;
-      $("downloadZip").disabled = true;
-      $("clear").disabled = true;
-      showProgress(false);
-      setStatus("Ready.");
-    } else {
-      $("convert").disabled = false;
-      $("clear").disabled = false;
-      setStatus(`${state.files.length} file(s) selected.`);
-    }
-    renderTable();
   }
 
   function renderTable(){
@@ -441,6 +513,80 @@
     $("downloadZip").disabled = okCount === 0;
   }
 
+  function deleteFile(index){
+    if (state.busy) return;
+
+    state.files.splice(index, 1);
+    state.results.splice(index, 1);
+
+    if (state.files.length === 0){
+      $("convert").disabled = true;
+      $("downloadZip").disabled = true;
+      $("clear").disabled = true;
+      showProgress(false);
+      setStatus("Ready.");
+    } else {
+      $("convert").disabled = false;
+      $("clear").disabled = false;
+      setStatus(`${state.files.length} file(s) selected.`);
+    }
+    renderTable();
+  }
+
+  // Dropzone
+  const drop = $("drop");
+  drop.addEventListener("click", () => $("file").click());
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.opacity = "0.85"; });
+  drop.addEventListener("dragleave", () => { drop.style.opacity = "1"; });
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault(); drop.style.opacity = "1";
+    addFiles(Array.from(e.dataTransfer.files || []));
+  });
+  $("file").addEventListener("change", (e) => {
+    addFiles(Array.from(e.target.files || []));
+    $("file").value = "";
+  });
+
+  function addFiles(files){
+    const images = files.filter(f => f && (f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)));
+    if (!images.length){ setStatus("No image files detected."); return; }
+
+    state.files.push(...images);
+    state.results = new Array(state.files.length).fill(null);
+
+    $("convert").disabled = false;
+    $("clear").disabled = false;
+    setStatus(`${state.files.length} file(s) selected.`);
+    renderTable();
+  }
+
+  // Advanced toggle
+  function setAdvanced(on){
+    state.advanced = !!on;
+    const sw = $("advSwitch");
+    const adv = $("advanced");
+    if (state.advanced){
+      sw.classList.add("on");
+      sw.setAttribute("aria-checked", "true");
+      adv.classList.add("show");
+    } else {
+      sw.classList.remove("on");
+      sw.setAttribute("aria-checked", "false");
+      adv.classList.remove("show");
+    }
+  }
+
+  $("advToggle").addEventListener("click", () => setAdvanced(!state.advanced));
+  $("advSwitch").addEventListener("click", (e) => { e.stopPropagation(); setAdvanced(!state.advanced); });
+  $("advSwitch").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setAdvanced(!state.advanced); }
+  });
+
+  // Advanced inputs
+  $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
+  $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
+
+  // Worker
   function ensureWorker(){
     if (state.worker) return;
 
@@ -505,11 +651,14 @@
               outW = s.w; outH = s.h;
             }
 
-            const { blob: outBlob, q } = await makeUnderTarget(bmp, outW, outH, settings.bg, settings.quality, settings.targetBytes);
+            const { blob: outBlob } = await makeUnderTarget(
+              bmp, outW, outH, settings.bg, settings.quality, settings.targetBytes
+            );
+
             const ab = await outBlob.arrayBuffer();
 
             done++;
-            self.postMessage({ type:"result", index:i, ok:true, name:f.outName, size:outBlob.size, q, data:ab }, [ab]);
+            self.postMessage({ type:"result", index:i, ok:true, name:f.outName, size:outBlob.size, data:ab }, [ab]);
             self.postMessage({ type:"progress", done, total });
 
           } catch (e){
@@ -544,12 +693,17 @@
     state.results = new Array(state.files.length).fill(null);
     renderTable();
 
+    // If Advanced is OFF, use safe defaults for advanced fields
+    const qualityPct = state.advanced ? Number($("quality").value) : 85;
+    const nameMode = state.advanced ? $("nameMode").value : "keep";
+    const bg = state.advanced ? bgColor() : "#ffffff";
+
     const settings = {
-      quality: Number($("quality").value) / 100,
+      quality: qualityPct / 100,
       resizeMode: $("resizeMode").value,
       maxW: Number($("maxW").value) || 0,
       maxH: Number($("maxH").value) || 0,
-      bg: bgColor(),
+      bg: bg,
       targetBytes: (Number($("targetKB").value) > 0) ? Math.round(Number($("targetKB").value) * 1024) : 0
     };
 
@@ -558,7 +712,14 @@
     for (let i=0; i<state.files.length; i++){
       const f = state.files[i];
       const ab = await f.arrayBuffer();
-      payload.push({ name:f.name, mime:f.type || "", outName: makeOutName(f.name, i), data: ab });
+      // compute outName depending on mode (advanced off: keep)
+      const original = f.name;
+      const base = safeBaseName(original);
+      let outName = `${base}.jpg`;
+      if (nameMode === "suffix") outName = `${base}-jpg.jpg`;
+      if (nameMode === "alljpg") outName = `alljpg-${String(i+1).padStart(3,"0")}.jpg`;
+
+      payload.push({ name:f.name, mime:f.type || "", outName, data: ab });
     }
 
     ensureWorker();
@@ -593,11 +754,7 @@
 
       if (m.type === "done"){
         const okCount = state.results.filter(Boolean).length;
-        if (okCount === state.files.length){
-          setStatus(`Done. Converted ${okCount} image(s).`);
-        } else {
-          setStatus(`Done. Converted ${okCount}/${state.files.length}. Some files may fail (often HEIC beta).`);
-        }
+        setStatus(`Done. Converted ${okCount}/${state.files.length}.`);
         $("downloadZip").disabled = okCount === 0;
         $("convert").disabled = false;
         state.busy = false;
@@ -640,8 +797,8 @@
   });
 
   // init
+  setAdvanced(false);
   renderTable();
 </script>
 </body>
 </html>
-

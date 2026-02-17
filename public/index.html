@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>all to jpg — Uncle Nick’s Network</title>
+  <title>alljpg.xyz — Uncle Nick’s Network</title>
   <meta name="description" content="Convert images to JPG, resize & compress — in your browser. No uploads." />
 
-  <!-- Google Analytics (GA4) — replace G-XXXXXXXXXX with your Measurement ID -->
+  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBXM5LV7KM"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -27,6 +27,8 @@
       --optBg:#ffffff;
       --optBorder:#e5e7eb;
       --optShadow:0 6px 18px rgba(0,0,0,.04);
+      --disabledBg:#f3f4f6;
+      --disabledText:#9ca3af;
     }
     *{box-sizing:border-box}
     body{
@@ -61,9 +63,14 @@
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       margin-bottom:10px;
     }
-    .panel h2{margin:0; font-size:14px; font-weight:800; color:#374151;}
+    .panel h2{
+      margin:0;
+      font-size:15px;
+      font-weight:700;
+      letter-spacing:.2px;
+      color:#374151;
+    }
 
-    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
     input[type="number"], input[type="text"], select{
       width:100%; padding:10px 10px; border:1px solid var(--line); border-radius:12px; outline:none; font-size:14px;
       background:#fff;
@@ -71,7 +78,6 @@
     input[type="range"]{width:100%;}
     .muted{color:var(--muted)}
 
-    /* Grid for option cards */
     .grid3{
       display:grid;
       grid-template-columns: 1fr;
@@ -81,7 +87,6 @@
       .grid3{ grid-template-columns: 1fr 1fr 1fr; }
     }
 
-    /* Option card with visible borders (mobile-friendly) */
     .opt{
       position:relative;
       border:1px solid var(--optBorder);
@@ -95,11 +100,14 @@
       margin-bottom:8px;
     }
     .optTitle{
-      font-size:12px;
-      font-weight:800;
+      font-size:12.5px;
+      font-weight:650;
+      letter-spacing:.15px;
       color:#374151;
-      line-height:1.2;
+      line-height:1.3;
     }
+
+    /* “i” button is clickable */
     .infoDot{
       width:18px; height:18px; border-radius:999px;
       border:1px solid var(--line);
@@ -108,27 +116,69 @@
       font-size:12px;
       background:#fff;
       flex:0 0 auto;
+      cursor:pointer;
+      user-select:none;
     }
-    /* Help text shown on hover/focus */
+    .infoDot:active{ transform: scale(.98); }
+
+    /* Help (smooth) */
     .help{
-      display:none;
       margin-top:8px;
       font-size:12px;
       color:#6b7280;
       line-height:1.35;
+
+      opacity:0;
+      transform: translateY(-4px);
+      max-height:0;
+      overflow:hidden;
+      transition: opacity .18s ease, transform .18s ease, max-height .22s ease;
     }
-    .opt:hover .help,
-    .opt:focus-within .help{
+
+    /* Desktop: hover/focus shows help */
+    @media (hover:hover) and (pointer:fine){
+      .opt:hover .help,
+      .opt:focus-within .help{
+        opacity:1;
+        transform: translateY(0);
+        max-height:140px;
+      }
+    }
+
+    /* Mobile + manual toggle: class drives help visibility */
+    .opt.show-help .help{
+      opacity:1;
+      transform: translateY(0);
+      max-height:140px;
+    }
+
+    /* Disabled opt fields style */
+    .disabledField input[disabled]{
+      background: var(--disabledBg);
+      color: var(--disabledText);
+      cursor:not-allowed;
+    }
+    .disabledField input[disabled]::placeholder{
+      color: #b6bcc6;
+    }
+    .disabledNote{
+      margin-top:8px;
+      font-size:12px;
+      color:#9ca3af;
+      line-height:1.35;
+      display:none;
+    }
+    .opt.disabledField .disabledNote{
       display:block;
     }
 
-    /* Toggle (Advanced mode) */
     .toggle{
       display:flex; align-items:center; gap:10px;
       user-select:none;
       font-size:12px;
       color:#374151;
-      font-weight:700;
+      font-weight:650;
+      letter-spacing:.15px;
     }
     .switch{
       width:42px; height:24px;
@@ -193,14 +243,13 @@
 
     .table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; border:1px solid var(--line); margin-top:14px; display:none;}
     .table th, .table td{padding:10px 10px; font-size:13px; border-bottom:1px solid #eef2f7; vertical-align:middle;}
-    .table th{background:#f8fafc; text-align:left; color:#374151; font-weight:800;}
+    .table th{background:#f8fafc; text-align:left; color:#374151; font-weight:700;}
     .right{text-align:right;}
     .sr{font-variant-numeric: tabular-nums;}
 
     footer{width:min(860px,100%); text-align:center; color:var(--muted); font-size:12px; line-height:1.45; padding:6px 10px 0;}
     .footer-strong{color:#374151; font-weight:700;}
 
-    /* Advanced section hidden by default */
     .advanced{ display:none; margin-top:12px; }
     .advanced.show{ display:block; }
   </style>
@@ -233,7 +282,7 @@
           </svg>
         </div>
 
-        <h1>All JPG - convert, compress and resize</h1>
+        <h1>alljpg.xyz</h1>
         <p class="sub">Uncle Nick’s Network — Convert to JPG, resize & compress (no uploads).</p>
       </div>
 
@@ -257,12 +306,12 @@
             </div>
           </div>
 
-          <!-- SIMPLE (default): target size + resize -->
+          <!-- SIMPLE -->
           <div class="grid3">
-            <div class="opt">
+            <div class="opt" data-help>
               <div class="optTitleRow">
                 <div class="optTitle">Target file size (KB) — “Make it under”</div>
-                <div class="infoDot" aria-hidden="true">i</div>
+                <div class="infoDot" role="button" aria-label="Help">i</div>
               </div>
               <input id="targetKB" type="number" min="0" placeholder="e.g. 300" />
               <div class="help">
@@ -270,10 +319,10 @@
               </div>
             </div>
 
-            <div class="opt">
+            <div class="opt" data-help>
               <div class="optTitleRow">
                 <div class="optTitle">Resize mode</div>
-                <div class="infoDot" aria-hidden="true">i</div>
+                <div class="infoDot" role="button" aria-label="Help">i</div>
               </div>
               <select id="resizeMode">
                 <option value="none">No resize</option>
@@ -284,28 +333,31 @@
               </div>
             </div>
 
-            <div class="opt">
+            <div class="opt disabledField" data-help id="maxBox">
               <div class="optTitleRow">
                 <div class="optTitle">Max width / height (px)</div>
-                <div class="infoDot" aria-hidden="true">i</div>
+                <div class="infoDot" role="button" aria-label="Help">i</div>
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <input id="maxW" type="number" min="1" placeholder="e.g. 1920" />
-                <input id="maxH" type="number" min="1" placeholder="e.g. 1080" />
+                <input id="maxW" type="number" min="1" placeholder="e.g. 1920" disabled />
+                <input id="maxH" type="number" min="1" placeholder="e.g. 1080" disabled />
               </div>
+
+              <div class="disabledNote">Select “Fit within” to enable these fields.</div>
+
               <div class="help">
                 Only used when Resize mode is “Fit within”. Leave empty to skip resizing.
               </div>
             </div>
           </div>
 
-          <!-- ADVANCED (hidden by default): quality + naming + background -->
+          <!-- ADVANCED -->
           <div class="advanced" id="advanced">
             <div class="grid3">
-              <div class="opt">
+              <div class="opt" data-help>
                 <div class="optTitleRow">
                   <div class="optTitle">Quality (<span id="qLabel">85</span>%)</div>
-                  <div class="infoDot" aria-hidden="true">i</div>
+                  <div class="infoDot" role="button" aria-label="Help">i</div>
                 </div>
                 <input id="quality" type="range" min="30" max="95" value="85" />
                 <div class="help">
@@ -313,10 +365,10 @@
                 </div>
               </div>
 
-              <div class="opt">
+              <div class="opt" data-help>
                 <div class="optTitleRow">
                   <div class="optTitle">Filename pattern</div>
-                  <div class="infoDot" aria-hidden="true">i</div>
+                  <div class="infoDot" role="button" aria-label="Help">i</div>
                 </div>
                 <select id="nameMode">
                   <option value="keep">Keep original name</option>
@@ -328,10 +380,10 @@
                 </div>
               </div>
 
-              <div class="opt">
+              <div class="opt" data-help>
                 <div class="optTitleRow">
                   <div class="optTitle">Background for transparency</div>
-                  <div class="infoDot" aria-hidden="true">i</div>
+                  <div class="infoDot" role="button" aria-label="Help">i</div>
                 </div>
                 <select id="bg">
                   <option value="white">White</option>
@@ -387,7 +439,6 @@
     </footer>
   </div>
 
-  <!-- JSZip for ZIP downloads -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script>
@@ -400,6 +451,29 @@
     busy: false,
     advanced: false
   };
+
+  // --- Help toggles (mobile “i” tap)
+  function closeAllHelp(exceptOpt){
+    document.querySelectorAll(".opt.show-help").forEach(opt => {
+      if (opt !== exceptOpt) opt.classList.remove("show-help");
+    });
+  }
+
+  function initHelp(){
+    document.querySelectorAll(".opt[data-help] .infoDot").forEach(dot => {
+      dot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const opt = dot.closest(".opt");
+        const willShow = !opt.classList.contains("show-help");
+        closeAllHelp(opt);
+        opt.classList.toggle("show-help", willShow);
+      });
+    });
+
+    // tap outside closes help on mobile
+    document.addEventListener("click", () => closeAllHelp(null));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllHelp(null); });
+  }
 
   function fmtBytes(bytes){
     if (!Number.isFinite(bytes)) return "—";
@@ -436,14 +510,6 @@
 
   function safeBaseName(filename){
     return filename.replace(/\.[^.]+$/, "").replace(/[^\w\-]+/g, "_").slice(0, 80);
-  }
-
-  function makeOutName(originalName, idx){
-    const mode = $("nameMode").value;
-    if (mode === "alljpg") return `alljpg-${String(idx+1).padStart(3,"0")}.jpg`;
-    const base = safeBaseName(originalName);
-    if (mode === "suffix") return `${base}-jpg.jpg`;
-    return `${base}.jpg`;
   }
 
   function downloadBlob(blob, filename){
@@ -582,9 +648,28 @@
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setAdvanced(!state.advanced); }
   });
 
-  // Advanced inputs
   $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
   $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
+
+  // Resize mode -> enable/disable maxW/maxH (visible but greyed until Fit within)
+  function syncResizeUI(){
+    const fit = $("resizeMode").value === "fit";
+    const maxBox = $("maxBox");
+    const maxW = $("maxW");
+    const maxH = $("maxH");
+
+    maxW.disabled = !fit;
+    maxH.disabled = !fit;
+
+    if (fit){
+      maxBox.classList.remove("disabledField");
+    } else {
+      maxBox.classList.add("disabledField");
+      // Optional: close help if user switches off fit (keeps UI tidy)
+      maxBox.classList.remove("show-help");
+    }
+  }
+  $("resizeMode").addEventListener("change", syncResizeUI);
 
   // Worker
   function ensureWorker(){
@@ -689,11 +774,9 @@
     setProgress(0, state.files.length);
     setStatus("Converting… (worker)");
 
-    // reset results
     state.results = new Array(state.files.length).fill(null);
     renderTable();
 
-    // If Advanced is OFF, use safe defaults for advanced fields
     const qualityPct = state.advanced ? Number($("quality").value) : 85;
     const nameMode = state.advanced ? $("nameMode").value : "keep";
     const bg = state.advanced ? bgColor() : "#ffffff";
@@ -707,14 +790,12 @@
       targetBytes: (Number($("targetKB").value) > 0) ? Math.round(Number($("targetKB").value) * 1024) : 0
     };
 
-    // build payload
     const payload = [];
     for (let i=0; i<state.files.length; i++){
       const f = state.files[i];
       const ab = await f.arrayBuffer();
-      // compute outName depending on mode (advanced off: keep)
-      const original = f.name;
-      const base = safeBaseName(original);
+
+      const base = safeBaseName(f.name);
       let outName = `${base}.jpg`;
       if (nameMode === "suffix") outName = `${base}-jpg.jpg`;
       if (nameMode === "alljpg") outName = `alljpg-${String(i+1).padStart(3,"0")}.jpg`;
@@ -797,7 +878,9 @@
   });
 
   // init
+  initHelp();
   setAdvanced(false);
+  syncResizeUI();
   renderTable();
 </script>
 </body>

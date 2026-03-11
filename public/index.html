@@ -1,3 +1,6 @@
+Evo celog **izmenjenog `index.html` fajla** za **alljpg.xyz**, spremnog da ga prekopiraš preko starog:
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,14 +9,10 @@
   <title>All JPG - Uncle Nick's Network</title>
   <meta name="description" content="Convert images to JPG, resize & compress — in your browser. No uploads." />
 
-<!-- Favicon -->
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 
-
-
-
-  
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBXM5LV7KM"></script>
   <script>
@@ -63,7 +62,7 @@
     .logo img{
       width:100%;
       height:100%;
-      object-fit:cover; /* ako želiš da se vidi ceo logo bez sečenja: stavi "contain" */
+      object-fit:cover;
       display:block;
     }
 
@@ -116,8 +115,6 @@
       background:var(--optBg);
       padding:12px;
       box-shadow: var(--optShadow);
-
-      /* keep layout stable; help is overlay */
       padding-bottom:12px;
     }
     .optTitleRow{
@@ -125,11 +122,10 @@
       margin-bottom:8px;
     }
 
-    /* OPTION TITLE now matches drop title feel (but black) */
     .optTitle{
-      font-size:16px;         /* like drop title */
-      font-weight:600;        /* like drop title */
-      color:#111827;          /* black-ish */
+      font-size:16px;
+      font-weight:600;
+      color:#111827;
       letter-spacing:0;
       line-height:1.25;
     }
@@ -147,7 +143,6 @@
     }
     .infoDot:active{ transform: scale(.98); }
 
-    /* HELP is now an overlay bubble; does not push layout */
     .help{
       position:absolute;
       left:12px;
@@ -171,7 +166,6 @@
       transition: opacity .18s ease, transform .18s ease;
       z-index:30;
     }
-    /* little arrow */
     .help::before{
       content:"";
       position:absolute;
@@ -184,7 +178,6 @@
       transform: rotate(45deg);
     }
 
-    /* Desktop hover/focus */
     @media (hover:hover) and (pointer:fine){
       .opt:hover .help,
       .opt:focus-within .help{
@@ -193,7 +186,6 @@
         pointer-events:auto;
       }
     }
-    /* Mobile/manual toggle */
     .opt.show-help .help{
       opacity:1;
       transform: translateY(0);
@@ -207,7 +199,6 @@
       .optionsSpacer{ height:44px; }
     }
 
-    /* Disabled max fields look */
     .disabledField input[disabled]{
       background: var(--disabledBg);
       color: var(--disabledText);
@@ -303,6 +294,136 @@
 
     .advanced{ display:none; margin-top:12px; }
     .advanced.show{ display:block; }
+
+    /* Ko-fi card */
+    #kofi-card{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      z-index:9999;
+      max-width:340px;
+      width:calc(100vw - 32px);
+    }
+
+    .kofi-hidden{
+      display:none;
+    }
+
+    .kofi-visible{
+      display:block;
+      animation:kofiFadeIn .35s ease;
+    }
+
+    .kofi-card-inner{
+      position:relative;
+      background:#ffffff;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.14);
+      padding:16px 18px 16px 16px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .kofi-card-text{
+      margin-right:28px;
+    }
+
+    .kofi-title{
+      font-size:16px;
+      font-weight:700;
+      color:#111827;
+      margin-bottom:6px;
+      line-height:1.3;
+    }
+
+    .kofi-subtitle{
+      font-size:13px;
+      line-height:1.45;
+      color:#4b5563;
+      margin-bottom:14px;
+    }
+
+    .kofi-button{
+      display:inline-block;
+      background:#72a4f2;
+      color:#ffffff;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:600;
+      padding:11px 16px;
+      border-radius:999px;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      box-shadow:0 4px 12px rgba(114,164,242,.35);
+    }
+
+    .kofi-button:hover{
+      background:#5f93e6;
+      transform:translateY(-1px);
+    }
+
+    .kofi-button:active{
+      transform:translateY(0);
+    }
+
+    #kofi-close{
+      position:absolute;
+      top:8px;
+      right:8px;
+      width:28px;
+      height:28px;
+      border:none;
+      background:transparent;
+      color:#6b7280;
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      border-radius:50%;
+    }
+
+    #kofi-close:hover{
+      background:rgba(0,0,0,.05);
+      color:#111827;
+    }
+
+    @keyframes kofiFadeIn{
+      from{
+        opacity:0;
+        transform:translateY(12px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media (max-width:640px){
+      #kofi-card{
+        right:12px;
+        left:12px;
+        bottom:12px;
+        max-width:none;
+        width:auto;
+      }
+
+      .kofi-card-inner{
+        padding:14px 16px;
+      }
+
+      .kofi-title{
+        font-size:15px;
+      }
+
+      .kofi-subtitle{
+        font-size:12.5px;
+      }
+
+      .kofi-button{
+        display:block;
+        text-align:center;
+        width:100%;
+        box-sizing:border-box;
+      }
+    }
   </style>
 </head>
 
@@ -311,7 +432,6 @@
     <div class="card">
       <div class="top">
         <div class="logo" aria-label="Uncle Nick logo">
-          <!-- ✅ NEW: logo.png -->
           <img src="assets/logo.png" alt="Uncle Nick’s Network — alljpg.xyz" />
         </div>
 
@@ -339,7 +459,6 @@
             </div>
           </div>
 
-          <!-- SIMPLE -->
           <div class="grid3" id="simpleGrid">
             <div class="opt" data-help>
               <div class="optTitleRow">
@@ -384,7 +503,6 @@
 
           <div class="optionsSpacer" aria-hidden="true"></div>
 
-          <!-- ADVANCED -->
           <div class="advanced" id="advanced">
             <div class="grid3">
               <div class="opt" data-help>
@@ -474,448 +592,497 @@
     </footer>
   </div>
 
+  <!-- Ko-fi Support Card -->
+  <div id="kofi-card" class="kofi-hidden" aria-live="polite">
+    <div class="kofi-card-inner">
+      <div class="kofi-card-text">
+        <div class="kofi-title">Image conversion helped?</div>
+        <div class="kofi-subtitle">
+          Support the project and help me build more simple browser-based image tools.
+        </div>
+      </div>
+
+      <a
+        class="kofi-button"
+        href="https://ko-fi.com/F1F01VQ67T"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ☕ Support on Ko-fi
+      </a>
+
+      <button id="kofi-close" aria-label="Close support card">×</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
-<script>
-  const $ = (id) => document.getElementById(id);
+  <script>
+    const $ = (id) => document.getElementById(id);
 
-  const state = {
-    files: [],
-    results: [],
-    worker: null,
-    busy: false,
-    advanced: false
-  };
+    const state = {
+      files: [],
+      results: [],
+      worker: null,
+      busy: false,
+      advanced: false
+    };
 
-  // Help toggles (mobile “i” tap)
-  function closeAllHelp(exceptOpt){
-    document.querySelectorAll(".opt.show-help").forEach(opt => {
-      if (opt !== exceptOpt) opt.classList.remove("show-help");
-    });
-  }
-
-  function initHelp(){
-    document.querySelectorAll(".opt[data-help] .infoDot").forEach(dot => {
-      dot.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const opt = dot.closest(".opt");
-        const willShow = !opt.classList.contains("show-help");
-        closeAllHelp(opt);
-        opt.classList.toggle("show-help", willShow);
+    // Help toggles (mobile “i” tap)
+    function closeAllHelp(exceptOpt){
+      document.querySelectorAll(".opt.show-help").forEach(opt => {
+        if (opt !== exceptOpt) opt.classList.remove("show-help");
       });
-    });
-
-    // tap outside closes help on mobile
-    document.addEventListener("click", () => closeAllHelp(null));
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllHelp(null); });
-  }
-
-  function fmtBytes(bytes){
-    if (!Number.isFinite(bytes)) return "—";
-    const kb = bytes/1024;
-    if (kb < 1024) return `${kb.toFixed(1)} KB`;
-    return `${(kb/1024).toFixed(2)} MB`;
-  }
-
-  function setStatus(msg){ $("status").textContent = msg; }
-
-  function showProgress(show){
-    $("progressWrap").style.display = show ? "block" : "none";
-    $("progressMeta").style.display = show ? "flex" : "none";
-    if (!show){
-      $("progressBar").style.width = "0%";
-      $("progressLeft").textContent = "0 / 0";
-      $("progressRight").textContent = "0%";
     }
-  }
 
-  function setProgress(done, total){
-    const pct = total ? Math.round((done/total)*100) : 0;
-    $("progressBar").style.width = `${pct}%`;
-    $("progressLeft").textContent = `${done} / ${total}`;
-    $("progressRight").textContent = `${pct}%`;
-  }
+    function initHelp(){
+      document.querySelectorAll(".opt[data-help] .infoDot").forEach(dot => {
+        dot.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const opt = dot.closest(".opt");
+          const willShow = !opt.classList.contains("show-help");
+          closeAllHelp(opt);
+          opt.classList.toggle("show-help", willShow);
+        });
+      });
 
-  function bgColor(){
-    const mode = $("bg").value;
-    if (mode === "white") return "#ffffff";
-    if (mode === "black") return "#000000";
-    return ($("bgCustom").value || "#ffffff").trim();
-  }
+      document.addEventListener("click", () => closeAllHelp(null));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllHelp(null); });
+    }
 
-  function safeBaseName(filename){
-    return filename.replace(/\.[^.]+$/, "").replace(/[^\w\-]+/g, "_").slice(0, 80);
-  }
+    function fmtBytes(bytes){
+      if (!Number.isFinite(bytes)) return "—";
+      const kb = bytes/1024;
+      if (kb < 1024) return `${kb.toFixed(1)} KB`;
+      return `${(kb/1024).toFixed(2)} MB`;
+    }
 
-  function downloadBlob(blob, filename){
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
+    function setStatus(msg){ $("status").textContent = msg; }
 
-  function renderTable(){
-    const tbody = $("tbody");
-    tbody.innerHTML = "";
-    $("table").style.display = state.files.length ? "table" : "none";
-
-    state.files.forEach((f, idx) => {
-      const tr = document.createElement("tr");
-
-      const tdName = document.createElement("td");
-      tdName.textContent = f.name;
-
-      const tdOrig = document.createElement("td");
-      tdOrig.className = "right sr";
-      tdOrig.textContent = fmtBytes(f.size);
-
-      const tdRes = document.createElement("td");
-      tdRes.className = "right sr";
-      const res = state.results[idx];
-      tdRes.textContent = res ? fmtBytes(res.size) : "—";
-
-      const tdAct = document.createElement("td");
-      tdAct.className = "right";
-
-      const wrap = document.createElement("div");
-      wrap.style.display = "inline-flex";
-      wrap.style.gap = "8px";
-      wrap.style.flexWrap = "wrap";
-      wrap.style.justifyContent = "flex-end";
-
-      if (res){
-        const dl = document.createElement("button");
-        dl.className = "linkbtn";
-        dl.textContent = "Download";
-        dl.addEventListener("click", () => downloadBlob(res.blob, res.name));
-        wrap.appendChild(dl);
+    function showProgress(show){
+      $("progressWrap").style.display = show ? "block" : "none";
+      $("progressMeta").style.display = show ? "flex" : "none";
+      if (!show){
+        $("progressBar").style.width = "0%";
+        $("progressLeft").textContent = "0 / 0";
+        $("progressRight").textContent = "0%";
       }
+    }
 
-      const del = document.createElement("button");
-      del.className = "dangerbtn";
-      del.textContent = "Delete";
-      del.addEventListener("click", () => deleteFile(idx));
-      wrap.appendChild(del);
+    function setProgress(done, total){
+      const pct = total ? Math.round((done/total)*100) : 0;
+      $("progressBar").style.width = `${pct}%`;
+      $("progressLeft").textContent = `${done} / ${total}`;
+      $("progressRight").textContent = `${pct}%`;
+    }
 
-      tdAct.appendChild(wrap);
+    function bgColor(){
+      const mode = $("bg").value;
+      if (mode === "white") return "#ffffff";
+      if (mode === "black") return "#000000";
+      return ($("bgCustom").value || "#ffffff").trim();
+    }
 
-      tr.appendChild(tdName);
-      tr.appendChild(tdOrig);
-      tr.appendChild(tdRes);
-      tr.appendChild(tdAct);
-      tbody.appendChild(tr);
+    function safeBaseName(filename){
+      return filename.replace(/\.[^.]+$/, "").replace(/[^\w\-]+/g, "_").slice(0, 80);
+    }
+
+    function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderTable(){
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+      $("table").style.display = state.files.length ? "table" : "none";
+
+      state.files.forEach((f, idx) => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = f.name;
+
+        const tdOrig = document.createElement("td");
+        tdOrig.className = "right sr";
+        tdOrig.textContent = fmtBytes(f.size);
+
+        const tdRes = document.createElement("td");
+        tdRes.className = "right sr";
+        const res = state.results[idx];
+        tdRes.textContent = res ? fmtBytes(res.size) : "—";
+
+        const tdAct = document.createElement("td");
+        tdAct.className = "right";
+
+        const wrap = document.createElement("div");
+        wrap.style.display = "inline-flex";
+        wrap.style.gap = "8px";
+        wrap.style.flexWrap = "wrap";
+        wrap.style.justifyContent = "flex-end";
+
+        if (res){
+          const dl = document.createElement("button");
+          dl.className = "linkbtn";
+          dl.textContent = "Download";
+          dl.addEventListener("click", () => downloadBlob(res.blob, res.name));
+          wrap.appendChild(dl);
+        }
+
+        const del = document.createElement("button");
+        del.className = "dangerbtn";
+        del.textContent = "Delete";
+        del.addEventListener("click", () => deleteFile(idx));
+        wrap.appendChild(del);
+
+        tdAct.appendChild(wrap);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdOrig);
+        tr.appendChild(tdRes);
+        tr.appendChild(tdAct);
+        tbody.appendChild(tr);
+      });
+
+      const okCount = state.results.filter(Boolean).length;
+      $("downloadZip").disabled = okCount === 0;
+    }
+
+    function deleteFile(index){
+      if (state.busy) return;
+
+      state.files.splice(index, 1);
+      state.results.splice(index, 1);
+
+      if (state.files.length === 0){
+        $("convert").disabled = true;
+        $("downloadZip").disabled = true;
+        $("clear").disabled = true;
+        showProgress(false);
+        setStatus("Ready.");
+      } else {
+        $("convert").disabled = false;
+        $("clear").disabled = false;
+        setStatus(`${state.files.length} file(s) selected.`);
+      }
+      renderTable();
+    }
+
+    const drop = $("drop");
+    drop.addEventListener("click", () => $("file").click());
+    drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.opacity = "0.85"; });
+    drop.addEventListener("dragleave", () => { drop.style.opacity = "1"; });
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault(); drop.style.opacity = "1";
+      addFiles(Array.from(e.dataTransfer.files || []));
+    });
+    $("file").addEventListener("change", (e) => {
+      addFiles(Array.from(e.target.files || []));
+      $("file").value = "";
     });
 
-    const okCount = state.results.filter(Boolean).length;
-    $("downloadZip").disabled = okCount === 0;
-  }
+    function addFiles(files){
+      const images = files.filter(f => f && (f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)));
+      if (!images.length){ setStatus("No image files detected."); return; }
 
-  function deleteFile(index){
-    if (state.busy) return;
+      state.files.push(...images);
+      state.results = new Array(state.files.length).fill(null);
 
-    state.files.splice(index, 1);
-    state.results.splice(index, 1);
-
-    if (state.files.length === 0){
-      $("convert").disabled = true;
-      $("downloadZip").disabled = true;
-      $("clear").disabled = true;
-      showProgress(false);
-      setStatus("Ready.");
-    } else {
       $("convert").disabled = false;
       $("clear").disabled = false;
       setStatus(`${state.files.length} file(s) selected.`);
+      renderTable();
     }
-    renderTable();
-  }
 
-  // Dropzone
-  const drop = $("drop");
-  drop.addEventListener("click", () => $("file").click());
-  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.opacity = "0.85"; });
-  drop.addEventListener("dragleave", () => { drop.style.opacity = "1"; });
-  drop.addEventListener("drop", (e) => {
-    e.preventDefault(); drop.style.opacity = "1";
-    addFiles(Array.from(e.dataTransfer.files || []));
-  });
-  $("file").addEventListener("change", (e) => {
-    addFiles(Array.from(e.target.files || []));
-    $("file").value = "";
-  });
-
-  function addFiles(files){
-    const images = files.filter(f => f && (f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name)));
-    if (!images.length){ setStatus("No image files detected."); return; }
-
-    state.files.push(...images);
-    state.results = new Array(state.files.length).fill(null);
-
-    $("convert").disabled = false;
-    $("clear").disabled = false;
-    setStatus(`${state.files.length} file(s) selected.`);
-    renderTable();
-  }
-
-  // Advanced toggle
-  function setAdvanced(on){
-    state.advanced = !!on;
-    const sw = $("advSwitch");
-    const adv = $("advanced");
-    if (state.advanced){
-      sw.classList.add("on");
-      sw.setAttribute("aria-checked", "true");
-      adv.classList.add("show");
-    } else {
-      sw.classList.remove("on");
-      sw.setAttribute("aria-checked", "false");
-      adv.classList.remove("show");
-    }
-  }
-
-  $("advToggle").addEventListener("click", () => setAdvanced(!state.advanced));
-  $("advSwitch").addEventListener("click", (e) => { e.stopPropagation(); setAdvanced(!state.advanced); });
-  $("advSwitch").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setAdvanced(!state.advanced); }
-  });
-
-  $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
-  $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
-
-  // Resize mode -> enable/disable maxW/maxH (visible but greyed until Fit within)
-  function syncResizeUI(){
-    const fit = $("resizeMode").value === "fit";
-    const maxBox = $("maxBox");
-    const maxW = $("maxW");
-    const maxH = $("maxH");
-
-    maxW.disabled = !fit;
-    maxH.disabled = !fit;
-
-    if (fit){
-      maxBox.classList.remove("disabledField");
-    } else {
-      maxBox.classList.add("disabledField");
-      maxBox.classList.remove("show-help");
-    }
-  }
-  $("resizeMode").addEventListener("change", syncResizeUI);
-
-  // Worker
-  function ensureWorker(){
-    if (state.worker) return;
-
-    const workerCode = `
-      function calcFitSize(w, h, maxW, maxH){
-        if (!maxW && !maxH) return { w, h };
-        const mw = maxW || w;
-        const mh = maxH || h;
-        const scale = Math.min(1, mw / w, mh / h);
-        return { w: Math.max(1, Math.round(w * scale)), h: Math.max(1, Math.round(h * scale)) };
+    function setAdvanced(on){
+      state.advanced = !!on;
+      const sw = $("advSwitch");
+      const adv = $("advanced");
+      if (state.advanced){
+        sw.classList.add("on");
+        sw.setAttribute("aria-checked", "true");
+        adv.classList.add("show");
+      } else {
+        sw.classList.remove("on");
+        sw.setAttribute("aria-checked", "false");
+        adv.classList.remove("show");
       }
+    }
 
-      async function jpegFromBitmap(bmp, outW, outH, bg, q){
-        const canvas = new OffscreenCanvas(outW, outH);
-        const ctx = canvas.getContext("2d", { alpha: false });
-        ctx.fillStyle = bg;
-        ctx.fillRect(0,0,outW,outH);
-        ctx.drawImage(bmp, 0, 0, outW, outH);
-        return await canvas.convertToBlob({ type: "image/jpeg", quality: q });
+    $("advToggle").addEventListener("click", () => setAdvanced(!state.advanced));
+    $("advSwitch").addEventListener("click", (e) => { e.stopPropagation(); setAdvanced(!state.advanced); });
+    $("advSwitch").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setAdvanced(!state.advanced); }
+    });
+
+    $("quality").addEventListener("input", () => { $("qLabel").textContent = $("quality").value; });
+    $("bg").addEventListener("change", () => { $("bgCustomWrap").style.display = $("bg").value === "custom" ? "block" : "none"; });
+
+    function syncResizeUI(){
+      const fit = $("resizeMode").value === "fit";
+      const maxBox = $("maxBox");
+      const maxW = $("maxW");
+      const maxH = $("maxH");
+
+      maxW.disabled = !fit;
+      maxH.disabled = !fit;
+
+      if (fit){
+        maxBox.classList.remove("disabledField");
+      } else {
+        maxBox.classList.add("disabledField");
+        maxBox.classList.remove("show-help");
       }
+    }
+    $("resizeMode").addEventListener("change", syncResizeUI);
 
-      async function makeUnderTarget(bmp, outW, outH, bg, startQ, targetBytes){
-        let q = startQ;
-        let blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
-        if (!targetBytes) return { blob, q };
+    function ensureWorker(){
+      if (state.worker) return;
 
-        const floor = 0.30;
-        let attempts = 0;
-
-        while (blob.size > targetBytes && q > floor && attempts < 12){
-          const ratio = targetBytes / blob.size;
-          const nextQ = Math.max(floor, Math.min(q - 0.05, q * (0.5 + 0.5 * ratio)));
-          q = Number(nextQ.toFixed(3));
-          blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
-          attempts++;
+      const workerCode = `
+        function calcFitSize(w, h, maxW, maxH){
+          if (!maxW && !maxH) return { w, h };
+          const mw = maxW || w;
+          const mh = maxH || h;
+          const scale = Math.min(1, mw / w, mh / h);
+          return { w: Math.max(1, Math.round(w * scale)), h: Math.max(1, Math.round(h * scale)) };
         }
-        return { blob, q };
+
+        async function jpegFromBitmap(bmp, outW, outH, bg, q){
+          const canvas = new OffscreenCanvas(outW, outH);
+          const ctx = canvas.getContext("2d", { alpha: false });
+          ctx.fillStyle = bg;
+          ctx.fillRect(0,0,outW,outH);
+          ctx.drawImage(bmp, 0, 0, outW, outH);
+          return await canvas.convertToBlob({ type: "image/jpeg", quality: q });
+        }
+
+        async function makeUnderTarget(bmp, outW, outH, bg, startQ, targetBytes){
+          let q = startQ;
+          let blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
+          if (!targetBytes) return { blob, q };
+
+          const floor = 0.30;
+          let attempts = 0;
+
+          while (blob.size > targetBytes && q > floor && attempts < 12){
+            const ratio = targetBytes / blob.size;
+            const nextQ = Math.max(floor, Math.min(q - 0.05, q * (0.5 + 0.5 * ratio)));
+            q = Number(nextQ.toFixed(3));
+            blob = await jpegFromBitmap(bmp, outW, outH, bg, q);
+            attempts++;
+          }
+          return { blob, q };
+        }
+
+        self.onmessage = async (ev) => {
+          const msg = ev.data || {};
+          if (msg.type !== "convert") return;
+
+          const { files, settings } = msg;
+          const total = files.length;
+          let done = 0;
+
+          if (typeof OffscreenCanvas === "undefined" || typeof createImageBitmap === "undefined"){
+            self.postMessage({ type:"fatal", error:"Worker image processing not supported in this browser." });
+            return;
+          }
+
+          for (let i=0; i<total; i++){
+            const f = files[i];
+            try{
+              const blob = new Blob([f.data], { type: f.mime || "application/octet-stream" });
+              const bmp = await createImageBitmap(blob);
+
+              let outW = bmp.width, outH = bmp.height;
+              if (settings.resizeMode === "fit"){
+                const s = calcFitSize(bmp.width, bmp.height, settings.maxW, settings.maxH);
+                outW = s.w; outH = s.h;
+              }
+
+              const { blob: outBlob } = await makeUnderTarget(
+                bmp, outW, outH, settings.bg, settings.quality, settings.targetBytes
+              );
+
+              const ab = await outBlob.arrayBuffer();
+
+              done++;
+              self.postMessage({ type:"result", index:i, ok:true, name:f.outName, size:outBlob.size, data:ab }, [ab]);
+              self.postMessage({ type:"progress", done, total });
+
+            } catch (e){
+              done++;
+              self.postMessage({ type:"result", index:i, ok:false, error:String(e && e.message ? e.message : e) });
+              self.postMessage({ type:"progress", done, total });
+            }
+          }
+
+          self.postMessage({ type:"done" });
+        };
+      `;
+
+      const blob = new Blob([workerCode], { type: "application/javascript" });
+      const url = URL.createObjectURL(blob);
+      state.worker = new Worker(url);
+    }
+
+    async function convertAll(){
+      if (state.busy) return;
+      if (!state.files.length) return;
+
+      state.busy = true;
+      $("convert").disabled = true;
+      $("downloadZip").disabled = true;
+
+      showProgress(true);
+      setProgress(0, state.files.length);
+      setStatus("Converting… (worker)");
+
+      state.results = new Array(state.files.length).fill(null);
+      renderTable();
+
+      const qualityPct = state.advanced ? Number($("quality").value) : 85;
+      const nameMode = state.advanced ? $("nameMode").value : "keep";
+      const bg = state.advanced ? bgColor() : "#ffffff";
+
+      const settings = {
+        quality: qualityPct / 100,
+        resizeMode: $("resizeMode").value,
+        maxW: Number($("maxW").value) || 0,
+        maxH: Number($("maxH").value) || 0,
+        bg: bg,
+        targetBytes: (Number($("targetKB").value) > 0) ? Math.round(Number($("targetKB").value) * 1024) : 0
+      };
+
+      const payload = [];
+      for (let i=0; i<state.files.length; i++){
+        const f = state.files[i];
+        const ab = await f.arrayBuffer();
+
+        const base = safeBaseName(f.name);
+        let outName = `${base}.jpg`;
+        if (nameMode === "suffix") outName = `${base}-jpg.jpg`;
+        if (nameMode === "alljpg") outName = `alljpg-${String(i+1).padStart(3,"0")}.jpg`;
+
+        payload.push({ name:f.name, mime:f.type || "", outName, data: ab });
       }
 
-      self.onmessage = async (ev) => {
-        const msg = ev.data || {};
-        if (msg.type !== "convert") return;
+      ensureWorker();
+      const worker = state.worker;
 
-        const { files, settings } = msg;
-        const total = files.length;
-        let done = 0;
+      const onMessage = (ev) => {
+        const m = ev.data || {};
 
-        if (typeof OffscreenCanvas === "undefined" || typeof createImageBitmap === "undefined"){
-          self.postMessage({ type:"fatal", error:"Worker image processing not supported in this browser." });
+        if (m.type === "fatal"){
+          setStatus("Your browser does not support worker image processing. Try Chrome/Edge.");
+          showProgress(false);
+          state.busy = false;
+          $("convert").disabled = false;
+          worker.removeEventListener("message", onMessage);
           return;
         }
 
-        for (let i=0; i<total; i++){
-          const f = files[i];
-          try{
-            const blob = new Blob([f.data], { type: f.mime || "application/octet-stream" });
-            const bmp = await createImageBitmap(blob);
-
-            let outW = bmp.width, outH = bmp.height;
-            if (settings.resizeMode === "fit"){
-              const s = calcFitSize(bmp.width, bmp.height, settings.maxW, settings.maxH);
-              outW = s.w; outH = s.h;
-            }
-
-            const { blob: outBlob } = await makeUnderTarget(
-              bmp, outW, outH, settings.bg, settings.quality, settings.targetBytes
-            );
-
-            const ab = await outBlob.arrayBuffer();
-
-            done++;
-            self.postMessage({ type:"result", index:i, ok:true, name:f.outName, size:outBlob.size, data:ab }, [ab]);
-            self.postMessage({ type:"progress", done, total });
-
-          } catch (e){
-            done++;
-            self.postMessage({ type:"result", index:i, ok:false, error:String(e && e.message ? e.message : e) });
-            self.postMessage({ type:"progress", done, total });
-          }
+        if (m.type === "progress"){
+          setProgress(m.done, m.total);
+          setStatus(`Converting ${m.done}/${m.total}…`);
         }
 
-        self.postMessage({ type:"done" });
+        if (m.type === "result"){
+          if (m.ok){
+            const blob = new Blob([m.data], { type:"image/jpeg" });
+            state.results[m.index] = { name:m.name, blob, size:m.size };
+          } else {
+            state.results[m.index] = null;
+          }
+          renderTable();
+        }
+
+        if (m.type === "done"){
+          const okCount = state.results.filter(Boolean).length;
+          setStatus(`Done. Converted ${okCount}/${state.files.length}.`);
+          $("downloadZip").disabled = okCount === 0;
+          $("convert").disabled = false;
+          state.busy = false;
+
+          if (okCount > 0 && window.showKofiCard) {
+            window.showKofiCard();
+          }
+
+          worker.removeEventListener("message", onMessage);
+        }
       };
-    `;
 
-    const blob = new Blob([workerCode], { type: "application/javascript" });
-    const url = URL.createObjectURL(blob);
-    state.worker = new Worker(url);
-  }
-
-  async function convertAll(){
-    if (state.busy) return;
-    if (!state.files.length) return;
-
-    state.busy = true;
-    $("convert").disabled = true;
-    $("downloadZip").disabled = true;
-
-    showProgress(true);
-    setProgress(0, state.files.length);
-    setStatus("Converting… (worker)");
-
-    state.results = new Array(state.files.length).fill(null);
-    renderTable();
-
-    const qualityPct = state.advanced ? Number($("quality").value) : 85;
-    const nameMode = state.advanced ? $("nameMode").value : "keep";
-    const bg = state.advanced ? bgColor() : "#ffffff";
-
-    const settings = {
-      quality: qualityPct / 100,
-      resizeMode: $("resizeMode").value,
-      maxW: Number($("maxW").value) || 0,
-      maxH: Number($("maxH").value) || 0,
-      bg: bg,
-      targetBytes: (Number($("targetKB").value) > 0) ? Math.round(Number($("targetKB").value) * 1024) : 0
-    };
-
-    const payload = [];
-    for (let i=0; i<state.files.length; i++){
-      const f = state.files[i];
-      const ab = await f.arrayBuffer();
-
-      const base = safeBaseName(f.name);
-      let outName = `${base}.jpg`;
-      if (nameMode === "suffix") outName = `${base}-jpg.jpg`;
-      if (nameMode === "alljpg") outName = `alljpg-${String(i+1).padStart(3,"0")}.jpg`;
-
-      payload.push({ name:f.name, mime:f.type || "", outName, data: ab });
+      worker.addEventListener("message", onMessage);
+      worker.postMessage({ type:"convert", files: payload, settings }, payload.map(x => x.data));
     }
 
-    ensureWorker();
-    const worker = state.worker;
+    $("convert").addEventListener("click", convertAll);
 
-    const onMessage = (ev) => {
-      const m = ev.data || {};
+    $("downloadZip").addEventListener("click", async () => {
+      const ok = state.results.filter(Boolean);
+      if (!ok.length) return;
 
-      if (m.type === "fatal"){
-        setStatus("Your browser does not support worker image processing. Try Chrome/Edge.");
-        showProgress(false);
-        state.busy = false;
-        $("convert").disabled = false;
-        worker.removeEventListener("message", onMessage);
-        return;
+      setStatus("Building ZIP…");
+      $("downloadZip").disabled = true;
+
+      const zip = new JSZip();
+      ok.forEach(r => zip.file(r.name, r.blob));
+      const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level: 6 }});
+      downloadBlob(blob, "alljpg-converted.zip");
+
+      setStatus("ZIP downloaded.");
+      $("downloadZip").disabled = false;
+    });
+
+    $("clear").addEventListener("click", () => {
+      if (state.busy) return;
+      state.files = [];
+      state.results = [];
+      $("convert").disabled = true;
+      $("downloadZip").disabled = true;
+      $("clear").disabled = true;
+      setStatus("Ready.");
+      showProgress(false);
+      renderTable();
+    });
+
+    (function () {
+      const storageKey = "kofiCardDismissed_alljpg";
+      const card = document.getElementById("kofi-card");
+      const closeBtn = document.getElementById("kofi-close");
+
+      window.showKofiCard = function () {
+        if (!card) return;
+        if (localStorage.getItem(storageKey) === "1") return;
+        card.classList.remove("kofi-hidden");
+        card.classList.add("kofi-visible");
+      };
+
+      window.hideKofiCard = function () {
+        if (!card) return;
+        card.classList.remove("kofi-visible");
+        card.classList.add("kofi-hidden");
+        localStorage.setItem(storageKey, "1");
+      };
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", window.hideKofiCard);
       }
+    })();
 
-      if (m.type === "progress"){
-        setProgress(m.done, m.total);
-        setStatus(`Converting ${m.done}/${m.total}…`);
-      }
-
-      if (m.type === "result"){
-        if (m.ok){
-          const blob = new Blob([m.data], { type:"image/jpeg" });
-          state.results[m.index] = { name:m.name, blob, size:m.size };
-        } else {
-          state.results[m.index] = null;
-        }
-        renderTable();
-      }
-
-      if (m.type === "done"){
-        const okCount = state.results.filter(Boolean).length;
-        setStatus(`Done. Converted ${okCount}/${state.files.length}.`);
-        $("downloadZip").disabled = okCount === 0;
-        $("convert").disabled = false;
-        state.busy = false;
-        worker.removeEventListener("message", onMessage);
-      }
-    };
-
-    worker.addEventListener("message", onMessage);
-    worker.postMessage({ type:"convert", files: payload, settings }, payload.map(x => x.data));
-  }
-
-  $("convert").addEventListener("click", convertAll);
-
-  $("downloadZip").addEventListener("click", async () => {
-    const ok = state.results.filter(Boolean);
-    if (!ok.length) return;
-
-    setStatus("Building ZIP…");
-    $("downloadZip").disabled = true;
-
-    const zip = new JSZip();
-    ok.forEach(r => zip.file(r.name, r.blob));
-    const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level: 6 }});
-    downloadBlob(blob, "alljpg-converted.zip");
-
-    setStatus("ZIP downloaded.");
-    $("downloadZip").disabled = false;
-  });
-
-  $("clear").addEventListener("click", () => {
-    if (state.busy) return;
-    state.files = [];
-    state.results = [];
-    $("convert").disabled = true;
-    $("downloadZip").disabled = true;
-    $("clear").disabled = true;
-    setStatus("Ready.");
-    showProgress(false);
+    initHelp();
+    setAdvanced(false);
+    syncResizeUI();
     renderTable();
-  });
-
-  // init
-  initHelp();
-  setAdvanced(false);
-  syncResizeUI();
-  renderTable();
-</script>
+  </script>
 </body>
 </html>
+```
+
+Ako želiš, odmah mogu da uradim i **ceo gotov `index.html` za checkmyvpn** na isti način.
